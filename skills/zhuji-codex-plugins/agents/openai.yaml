@@ -1,0 +1,5 @@
+interface:
+  display_name: "开启 Codex 插件"
+  short_description: "安全开启 Codex App 插件并保留筑基模型配置"
+  default_prompt: "帮我开启 Codex 插件，先备份，别改坏当前登录态。"
+

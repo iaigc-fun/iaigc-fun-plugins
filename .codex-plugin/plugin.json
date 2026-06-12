@@ -1,0 +1,37 @@
+{
+  "name": "iaigc-fun-plugin",
+  "version": "0.1.0",
+  "description": "Zhuji assistant plugin for Codex setup, plugins, image generation, memory, and Feishu access.",
+  "author": {
+    "name": "筑基 AI"
+  },
+  "homepage": "https://iaigc.fun",
+  "repository": "https://github.com/iaigc-fun/iaigc-fun-plugins",
+  "license": "MIT",
+  "keywords": [
+    "zhuji",
+    "codex",
+    "ccswitch",
+    "memory",
+    "feishu",
+    "image"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "筑基插件",
+    "shortDescription": "让 Codex 接入筑基模型、生图、记忆和飞书入口。",
+    "longDescription": "筑基插件面向中国用户，把 Codex 常用配置收成几个易懂入口：接入筑基、开启 Codex 插件、AI 生图、长期记忆和移动端配置。它优先使用本地文件和可回滚脚本，不默认改登录态、不默认暴露网络入口。",
+    "developerName": "筑基 AI",
+    "category": "Productivity",
+    "capabilities": [
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "帮我接入筑基",
+      "帮我开启 Codex 插件",
+      "帮我用 Codex 生图"
+    ],
+    "brandColor": "#2563EB"
+  }
+}

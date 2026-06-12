@@ -1,0 +1,5 @@
+interface:
+  display_name: "AI 生图"
+  short_description: "在 Codex 里通过筑基 gpt-image-2 生成图片"
+  default_prompt: "帮我用筑基 gpt-image-2 生成一张图片。"
+

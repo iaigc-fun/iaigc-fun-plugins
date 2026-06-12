@@ -1,0 +1,12 @@
+{
+  "name": "iaigc-fun-plugin",
+  "private": true,
+  "version": "0.1.0",
+  "description": "筑基插件：让 Codex 接入筑基模型、生图、记忆和飞书入口。",
+  "type": "module",
+  "scripts": {
+    "config:codex": "node scripts/ccswitch_codex_config.mjs",
+    "doctor": "node scripts/zhuji_doctor.mjs"
+  },
+  "license": "MIT"
+}

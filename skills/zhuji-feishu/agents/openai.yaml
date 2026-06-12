@@ -1,0 +1,5 @@
+interface:
+  display_name: "移动端配置"
+  short_description: "配置飞书入口，在手机飞书里使用本地 Codex"
+  default_prompt: "帮我配置飞书入口，让我在手机上用 Codex。"
+
