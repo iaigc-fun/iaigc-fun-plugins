@@ -1,0 +1,87 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 96 96"
+  role="img"
+  aria-label="筑基 AI"
+>
+  <defs>
+    <linearGradient
+      id="jade"
+      x1="18"
+      y1="12"
+      x2="78"
+      y2="84"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop offset="0" stop-color="#f0e2ac" />
+      <stop offset="0.46" stop-color="#3f8065" />
+      <stop offset="1" stop-color="#163e34" />
+    </linearGradient>
+    <linearGradient
+      id="edge"
+      x1="12"
+      y1="12"
+      x2="84"
+      y2="84"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop offset="0" stop-color="#f8dea0" />
+      <stop offset="0.55" stop-color="#b8863d" />
+      <stop offset="1" stop-color="#6f4a20" />
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-16%" width="140%" height="138%">
+      <feDropShadow
+        dx="0"
+        dy="8"
+        stdDeviation="7"
+        flood-color="#0d2a22"
+        flood-opacity="0.26"
+      />
+    </filter>
+  </defs>
+  <path
+    d="M48 5 80 19v29c0 20.7-12.7 34.6-32 43C28.7 82.6 16 68.7 16 48V19L48 5Z"
+    fill="url(#jade)"
+    filter="url(#softShadow)"
+  />
+  <path
+    d="M48 8.9 76.2 21.2V48c0 18.1-10.7 30.8-28.2 38.7C30.5 78.8 19.8 66.1 19.8 48V21.2L48 8.9Z"
+    fill="none"
+    stroke="url(#edge)"
+    stroke-width="3.5"
+  />
+  <path
+    d="M27 28.8c11.8-5.3 28.1-6.4 42 .2M29.4 68.7c11.6 5.9 25.8 5.7 37.2-.6"
+    fill="none"
+    stroke="#f6df9d"
+    stroke-linecap="round"
+    stroke-width="2.2"
+    opacity=".48"
+  />
+  <text
+    x="48"
+    y="57"
+    text-anchor="middle"
+    font-family="KaiTi, STKaiti, serif"
+    font-size="43"
+    font-weight="700"
+    fill="#fff4cc"
+    stroke="#244538"
+    stroke-width="1.1"
+    paint-order="stroke"
+  >
+    筑
+  </text>
+  <text
+    x="48"
+    y="73"
+    text-anchor="middle"
+    font-family="Georgia, serif"
+    font-size="12"
+    font-weight="700"
+    letter-spacing="2"
+    fill="#ffe7a9"
+  >
+    AI
+  </text>
+</svg>

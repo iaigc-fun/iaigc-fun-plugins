@@ -1,6 +1,6 @@
 {
   "name": "iaigc-fun-plugin",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.20260612133440",
   "description": "筑基用户的 Codex 使用向导：接入模型、生图、记忆和飞书入口。",
   "author": {
     "name": "筑基 AI"
@@ -32,6 +32,8 @@
       "帮我接入筑基",
       "帮我用 Codex 生图"
     ],
-    "brandColor": "#2563EB"
+    "brandColor": "#3F8065",
+    "composerIcon": "./assets/zhuji-logo.svg",
+    "logo": "./assets/zhuji-logo.svg"
   }
 }
