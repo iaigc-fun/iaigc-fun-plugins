@@ -1,0 +1,20 @@
+{
+  "name": "iaigc-fun",
+  "interface": {
+    "displayName": "筑基插件市场"
+  },
+  "plugins": [
+    {
+      "name": "iaigc-fun-plugin",
+      "source": {
+        "source": "local",
+        "path": "./plugins/iaigc-fun-plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

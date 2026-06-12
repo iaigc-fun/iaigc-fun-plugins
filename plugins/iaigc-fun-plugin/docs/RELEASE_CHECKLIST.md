@@ -10,6 +10,7 @@
 - [ ] `npm test` 通过。
 - [ ] `node scripts/zhuji_doctor.mjs --json` 能输出 provider 检查结果。
 - [ ] README 里的 6 个入口和插件 manifest 一致。
+- [ ] `.agents/plugins/marketplace.json` 能作为 GitHub marketplace 安装入口。
 
 ## GitHub 前确认
 
