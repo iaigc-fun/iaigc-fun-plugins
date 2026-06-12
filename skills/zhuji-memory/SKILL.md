@@ -49,3 +49,9 @@ node ../../scripts/install_memory_workspace.mjs --workspace "$HOME/zhuji-codex-w
 - “每日整理”负责把零散记录沉淀到状态、上下文和长期记忆。
 - “记忆工作区”本质是本地文件夹，不是云端数据库。
 
+## 数据边界
+
+- 默认写在用户本机工作区，不上传云端。
+- 会写入 `0-System/status.md`、`0-System/context.md`、`0-System/memory/YYYY-MM-DD.md` 和 `0-System/about-me/MEMORY.md` 这类文本文件。
+- 删除或迁移记忆时，优先移动到可恢复目录，不直接永久删除。
+- 敏感信息只记录必要事实，不记录密钥、令牌、cookie、验证码或完整私人内容。

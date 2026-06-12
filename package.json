@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "config:codex": "node scripts/ccswitch_codex_config.mjs",
-    "doctor": "node scripts/zhuji_doctor.mjs"
+    "doctor": "node scripts/zhuji_doctor.mjs",
+    "test": "node --test"
   },
   "license": "MIT"
 }

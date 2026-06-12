@@ -4,11 +4,12 @@ import { parseArgs } from "node:util";
 
 const { values } = parseArgs({
   options: {
-    endpoint: { type: "string", default: "https://iaigc.fun/v1" },
+    endpoint: { type: "string", default: "https://api.iaigc.fun/v1" },
     model: { type: "string", default: "gpt-5.5" },
     provider: { type: "string", default: "custom" },
     name: { type: "string", default: "筑基" },
-    "reasoning-effort": { type: "string", default: "high" }
+    "reasoning-effort": { type: "string", default: "high" },
+    "api-key-env": { type: "string", default: "ZHUJI_API_KEY" }
   }
 });
 
@@ -26,7 +27,8 @@ const config = [
   `name = "${escapeToml(values.name)}"`,
   `base_url = "${escapeToml(values.endpoint)}"`,
   'wire_api = "responses"',
-  "requires_openai_auth = true",
+  "requires_openai_auth = false",
+  `env_key = "${escapeToml(values["api-key-env"])}"`,
   "",
   "[features]",
   "rmcp_client = true",
@@ -41,4 +43,3 @@ function escapeToml(value) {
     .replaceAll("\\", "\\\\")
     .replaceAll('"', '\\"');
 }
-

@@ -12,7 +12,7 @@ const { values } = parseArgs({
     quality: { type: "string", default: "auto" },
     n: { type: "string", default: "1" },
     output: { type: "string", default: "zhuji-image.png" },
-    "base-url": { type: "string", default: process.env.ZHUJI_BASE_URL || "https://iaigc.fun/v1" },
+    "base-url": { type: "string", default: process.env.ZHUJI_BASE_URL || "https://api.iaigc.fun/v1" },
     "api-key-env": { type: "string", default: "ZHUJI_API_KEY" }
   }
 });
@@ -24,10 +24,14 @@ if (!prompt) {
 
 const apiKey = process.env[values["api-key-env"]] || process.env.OPENAI_API_KEY;
 if (!apiKey) {
-  fail(`Missing API key. Set ${values["api-key-env"]} or OPENAI_API_KEY.`);
+  fail(`Missing Zhuji API key. Set ${values["api-key-env"]}. OPENAI_API_KEY is accepted only as a compatibility variable and must contain a Zhuji token.`);
 }
 
 const baseUrl = String(values["base-url"]).replace(/\/+$/, "");
+if (!isZhujiBaseUrl(baseUrl)) {
+  fail(`Refusing Zhuji image request because base URL is not a Zhuji endpoint: ${baseUrl}`);
+}
+
 const endpoint = `${baseUrl}/images/generations`;
 
 const response = await fetch(endpoint, {
@@ -78,3 +82,6 @@ function fail(message) {
   process.exit(1);
 }
 
+function isZhujiBaseUrl(value) {
+  return /^https:\/\/(?:[a-z0-9-]+\.)*iaigc\.fun(?:\/|$)/i.test(String(value || ""));
+}

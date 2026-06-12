@@ -4,34 +4,132 @@ import { existsSync, readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { pathToFileURL } from "node:url";
+import { parseArgs } from "node:util";
 
 const codexHome = process.env.CODEX_HOME || path.join(os.homedir(), ".codex");
 const configPath = path.join(codexHome, "config.toml");
 const authPath = path.join(codexHome, "auth.json");
 
-console.log("筑基插件本机检查");
-console.log(`CODEX_HOME: ${codexHome}`);
-
-run("codex login status", "env", ["-u", "CODEX_API_KEY", "codex", "login", "status"]);
-
-console.log("");
-console.log("config.toml:");
-if (existsSync(configPath)) {
-  console.log(redactConfig(readFileSync(configPath, "utf8")));
-} else {
-  console.log("  not found");
+if (isMain()) {
+  main();
 }
 
-console.log("");
-console.log("auth.json structure:");
-if (existsSync(authPath)) {
-  printAuthShape(authPath);
-} else {
-  console.log("  not found");
+function main() {
+  const { values } = parseArgs({
+    options: {
+      json: { type: "boolean", default: false }
+    },
+    allowPositionals: true
+  });
+
+  if (values.json) {
+    console.log(JSON.stringify(buildDoctorSummary(), null, 2));
+    return;
+  }
+
+  console.log("筑基插件本机检查");
+  console.log(`CODEX_HOME: ${codexHome}`);
+
+  run("codex login status", "env", ["-u", "CODEX_API_KEY", "codex", "login", "status"]);
+
+  console.log("");
+  console.log("config.toml:");
+  let configSource = "";
+  if (existsSync(configPath)) {
+    configSource = readFileSync(configPath, "utf8");
+    console.log(redactConfig(configSource));
+  } else {
+    console.log("  not found");
+  }
+
+  console.log("");
+  console.log("筑基 Provider:");
+  printZhujiProviderStatus(configSource);
+
+  console.log("");
+  console.log("auth.json structure:");
+  if (existsSync(authPath)) {
+    printAuthShape(readAuthShape(authPath));
+  } else {
+    console.log("  not found");
+  }
+
+  console.log("");
+  run("codex doctor", "env", ["-u", "CODEX_API_KEY", "codex", "doctor"]);
 }
 
-console.log("");
-run("codex doctor", "env", ["-u", "CODEX_API_KEY", "codex", "doctor"]);
+export function detectZhujiProvider(source) {
+  const config = String(source || "");
+  const activeProvider = extractTopLevelValue(config, "model_provider");
+  const providers = parseModelProviders(config);
+  const active = activeProvider ? providers.get(activeProvider) : undefined;
+
+  if (active) {
+    const activeMatch = matchZhujiProvider(active);
+    if (activeMatch.detected) {
+      return {
+        ...activeMatch,
+        activeProvider,
+        providerName: active.name || activeProvider
+      };
+    }
+
+    return {
+      detected: false,
+      reason: "active_provider_not_zhuji",
+      activeProvider,
+      providerName: active.name || activeProvider,
+      baseUrl: active.base_url || ""
+    };
+  }
+
+  for (const [providerId, provider] of providers) {
+    const match = matchZhujiProvider(provider);
+    if (match.detected) {
+      return {
+        ...match,
+        activeProvider: activeProvider || "",
+        providerName: provider.name || providerId
+      };
+    }
+  }
+
+  if (hasZhujiHost(config)) {
+    return { detected: true, reason: "base_url", activeProvider: activeProvider || "", baseUrl: extractFirstUrl(config) };
+  }
+
+  if (/name\s*=\s*"[^"]*筑基[^"]*"/.test(config)) {
+    return { detected: true, reason: "name", activeProvider: activeProvider || "", baseUrl: "" };
+  }
+
+  return { detected: false, reason: "not_found", activeProvider: activeProvider || "", baseUrl: "" };
+}
+
+export function buildDoctorSummary() {
+  const configSource = existsSync(configPath) ? readFileSync(configPath, "utf8") : "";
+  const auth = existsSync(authPath) ? readAuthShape(authPath) : { exists: false };
+  const zhujiProvider = detectZhujiProvider(configSource);
+  const status = zhujiProvider.detected ? "ok" : "warn";
+  const actions = zhujiProvider.detected
+    ? ["可以继续使用筑基专属能力，例如 AI 生图、模型检查和额度相关排查。"]
+    : [
+      "当前 Codex Provider 不是筑基，先不要继续筑基专属动作。",
+      "打开 https://iaigc.fun 注册/登录，在控制台创建令牌。",
+      "通过 CC Switch Codex 导入，或把 Codex Provider 的 base_url 配成 https://api.iaigc.fun/v1。"
+    ];
+
+  return {
+    codexHome,
+    status,
+    actions,
+    config: {
+      exists: existsSync(configPath)
+    },
+    zhujiProvider,
+    auth
+  };
+}
 
 function run(label, cmd, args) {
   console.log("");
@@ -46,6 +144,22 @@ function run(label, cmd, args) {
   if (typeof result.status === "number") console.log(`exit: ${result.status}`);
 }
 
+function printZhujiProviderStatus(configSource) {
+  const result = detectZhujiProvider(configSource);
+  console.log(`  zhuji_provider_detected=${result.detected}`);
+  console.log(`  zhuji_provider_reason=${result.reason}`);
+  if (result.activeProvider) console.log(`  active_provider=${result.activeProvider}`);
+  if (result.providerName) console.log(`  provider_name=${result.providerName}`);
+  if (result.baseUrl) console.log(`  base_url=${result.baseUrl}`);
+
+  if (!result.detected) {
+    console.log("");
+    console.log("  当前 Codex provider 不是筑基。筑基专属动作会先停止，不会继续生图或改配置。");
+    console.log("  下一步：打开 https://iaigc.fun 注册/登录，在控制台创建令牌，然后通过 CC Switch Codex 导入，");
+    console.log("  或把 Codex base_url 配成 https://api.iaigc.fun/v1，并使用筑基令牌。");
+  }
+}
+
 function redactConfig(source) {
   return source
     .replace(/(experimental_bearer_token\s*=\s*")[^"]+(")/g, "$1***$2")
@@ -54,16 +168,100 @@ function redactConfig(source) {
     .replace(/(sk-[A-Za-z0-9_-]{8,})/g, "sk-***");
 }
 
-function printAuthShape(file) {
+function printAuthShape(shape) {
+  if (!shape.readable) {
+    console.log(`  unreadable: ${shape.error}`);
+    return;
+  }
+
+  console.log(`  keys: ${shape.keys.join(", ") || "(none)"}`);
+  console.log(`  has_OPENAI_API_KEY: ${shape.hasOpenAiApiKey}`);
+  console.log(`  has_tokens: ${shape.hasTokens}`);
+  console.log(`  has_last_refresh: ${shape.hasLastRefresh}`);
+}
+
+function readAuthShape(file) {
   try {
     const auth = JSON.parse(readFileSync(file, "utf8"));
-    const keys = Object.keys(auth).sort();
-    console.log(`  keys: ${keys.join(", ") || "(none)"}`);
-    console.log(`  has_OPENAI_API_KEY: ${Boolean(auth.OPENAI_API_KEY)}`);
-    console.log(`  has_tokens: ${Boolean(auth.tokens)}`);
-    console.log(`  has_last_refresh: ${Boolean(auth.last_refresh)}`);
+    return {
+      exists: true,
+      readable: true,
+      keys: Object.keys(auth).sort(),
+      hasOpenAiApiKey: Boolean(auth.OPENAI_API_KEY),
+      hasTokens: Boolean(auth.tokens),
+      hasLastRefresh: Boolean(auth.last_refresh)
+    };
   } catch (error) {
-    console.log(`  unreadable: ${error.message}`);
+    return {
+      exists: true,
+      readable: false,
+      error: error.message
+    };
   }
 }
 
+function parseModelProviders(source) {
+  const providers = new Map();
+  let current = null;
+
+  for (const rawLine of source.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    const section = line.match(/^\[model_providers\.([A-Za-z0-9_-]+)\]$/);
+    if (section) {
+      current = { id: section[1] };
+      providers.set(section[1], current);
+      continue;
+    }
+
+    if (line.startsWith("[") && line.endsWith("]")) {
+      current = null;
+      continue;
+    }
+
+    if (!current) continue;
+    const pair = line.match(/^([A-Za-z0-9_-]+)\s*=\s*"([^"]*)"/);
+    if (pair) current[pair[1]] = pair[2];
+  }
+
+  return providers;
+}
+
+function matchZhujiProvider(provider) {
+  if (hasZhujiHost(provider.base_url || "")) {
+    return { detected: true, reason: "base_url", baseUrl: provider.base_url || "" };
+  }
+
+  if (String(provider.name || "").includes("筑基")) {
+    return { detected: true, reason: "name", baseUrl: provider.base_url || "" };
+  }
+
+  return { detected: false, reason: "provider_not_zhuji", baseUrl: provider.base_url || "" };
+}
+
+function hasZhujiHost(value) {
+  return /https?:\/\/(?:[a-z0-9-]+\.)*iaigc\.fun(?:\/|$)/i.test(String(value || ""));
+}
+
+function extractTopLevelValue(source, key) {
+  let inSection = false;
+  const pattern = new RegExp(`^${key}\\s*=\\s*"([^"]*)"`);
+
+  for (const rawLine of source.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (line.startsWith("[") && line.endsWith("]")) inSection = true;
+    if (inSection) continue;
+    const match = line.match(pattern);
+    if (match) return match[1];
+  }
+
+  return "";
+}
+
+function extractFirstUrl(source) {
+  const match = String(source || "").match(/https?:\/\/(?:[a-z0-9-]+\.)*iaigc\.fun[^\s"]*/i);
+  return match?.[0] || "";
+}
+
+function isMain() {
+  return import.meta.url === pathToFileURL(process.argv[1] || "").href;
+}

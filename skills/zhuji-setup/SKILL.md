@@ -27,10 +27,10 @@ description: 当用户想让 Codex 接入筑基、配置筑基模型、导入 CC
 
 普通用户优先走这个方式。它服务于 CC Switch，会把筑基 API Key 放进 CC Switch / Codex 导入配置里，用户不用手动编辑文件。
 
-生成推荐配置：
+从插件根目录生成推荐配置：
 
 ```bash
-node ../../scripts/ccswitch_codex_config.mjs
+node scripts/ccswitch_codex_config.mjs
 ```
 
 默认包含：
@@ -58,7 +58,7 @@ model_auto_compact_token_limit = 700000
 
 [model_providers.custom]
 name = "筑基"
-base_url = "https://iaigc.fun/v1"
+base_url = "https://api.iaigc.fun/v1"
 wire_api = "responses"
 requires_openai_auth = false
 experimental_bearer_token = "<ZHUJI_API_KEY>"
@@ -74,7 +74,7 @@ goals = true
 ```toml
 [model_providers.custom]
 name = "筑基"
-base_url = "https://iaigc.fun/v1"
+base_url = "https://api.iaigc.fun/v1"
 wire_api = "responses"
 requires_openai_auth = false
 env_key = "ZHUJI_API_KEY"
@@ -83,7 +83,7 @@ env_key = "ZHUJI_API_KEY"
 如果用户要检查配置，优先运行：
 
 ```bash
-node ../../scripts/zhuji_doctor.mjs
+node scripts/zhuji_doctor.mjs
 ```
 
 ## 工作流
@@ -94,7 +94,7 @@ node ../../scripts/zhuji_doctor.mjs
    - 脱敏读取 `~/.codex/config.toml`
    - 检查 `codex doctor`
 3. 如果要改配置，先运行备份：
-   - `bash ../../scripts/backup_codex_state.sh`
+   - `bash scripts/backup_codex_state.sh`
 4. 写入最小必要配置，保留用户已有 API Key 或 env 配置，不打印密钥。
 5. 验证并告诉用户：
    - 当前 provider 名称
@@ -108,3 +108,4 @@ node ../../scripts/zhuji_doctor.mjs
 - **一键导入配置**：给 CC Switch 用，帮用户少改文件。
 - **推荐加速配置**：包含 `service_tier="fast"`、`fast_mode=true`、1M 上下文和 700K 自动压缩阈值。
 - **检查是否配置成功**：看登录、provider、base_url、模型和 `codex doctor`，不看密钥明文。
+- **筑基 API Base**：首选 `https://api.iaigc.fun/v1`；检测脚本也会识别 `iaigc.fun` 体系的历史入口。

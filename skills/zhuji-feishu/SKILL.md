@@ -39,6 +39,13 @@ node ~/codex-x/packages/feishu-codex-cli/bin/feishu-codex.mjs bridge logs
 node ~/codex-x/packages/feishu-codex-cli/bin/feishu-codex.mjs bridge stop
 ```
 
+## 前置清单
+
+- 本机有 `codex-x` 或可用的 `feishu-codex-cli`。
+- 用户已经准备飞书应用 / bot 所需配置。
+- 知道要连接哪个 Codex 工作区。
+- 启动前先知道日志命令和停止命令。
+
 ## 工作流
 
 1. 确认用户要连接哪个 Codex 工作区。
@@ -58,4 +65,3 @@ node ~/codex-x/packages/feishu-codex-cli/bin/feishu-codex.mjs bridge stop
 - 不默认绑定 `0.0.0.0`。
 - 不默认开公网 tunnel。
 - 不把“移动端配置”扩展成远程桌面或文件管理。
-
