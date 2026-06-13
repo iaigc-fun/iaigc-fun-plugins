@@ -1,9 +1,10 @@
 {
   "name": "iaigc-fun-plugin",
-  "version": "0.1.0+codex.20260612133440",
-  "description": "筑基用户的 Codex 使用向导：接入模型、生图、记忆和飞书入口。",
+  "version": "0.1.0+codex.20260613023609",
+  "description": "\u7b51\u57fa\u7528\u6237\u7684 Codex \u4f7f\u7528\u5411\u5bfc\uff1a\u63a5\u5165\u6a21\u578b\u3001\u751f\u56fe\u3001\u8bb0\u5fc6\u548c\u98de\u4e66\u5165\u53e3\u3002",
   "author": {
-    "name": "筑基 AI"
+    "name": "\u7b51\u57fa AI",
+    "url": "https://iaigc.fun"
   },
   "homepage": "https://iaigc.fun",
   "repository": "https://github.com/iaigc-fun/iaigc-fun-plugins",
@@ -18,19 +19,20 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "筑基插件",
-    "shortDescription": "筑基用户的 Codex 使用向导：接入模型、生图、记忆和飞书入口。",
-    "longDescription": "筑基插件面向筑基用户，把 Codex 常用配置收成几个易懂入口：筑基使用向导、接入筑基、开启 Codex 插件、AI 生图、长期记忆和移动端配置。它会先介绍筑基 AI 主站、API、令牌和 CC Switch 导入路径；遇到当前 Codex Provider 不是筑基时，筑基专属动作会停止，并引导用户去 iaigc.fun 注册、创建令牌和配置 Provider。",
-    "developerName": "筑基 AI",
+    "displayName": "\u7b51\u57fa\u63d2\u4ef6",
+    "shortDescription": "\u7b51\u57fa\u7528\u6237\u7684 Codex \u4f7f\u7528\u5411\u5bfc\uff1a\u63a5\u5165\u6a21\u578b\u3001\u751f\u56fe\u3001\u8bb0\u5fc6\u548c\u98de\u4e66\u5165\u53e3\u3002",
+    "longDescription": "\u7b51\u57fa\u63d2\u4ef6\u9762\u5411\u7b51\u57fa\u7528\u6237\uff0c\u628a Codex \u5e38\u7528\u914d\u7f6e\u6536\u6210\u51e0\u4e2a\u6613\u61c2\u5165\u53e3\uff1a\u7b51\u57fa\u4f7f\u7528\u5411\u5bfc\u3001\u63a5\u5165\u7b51\u57fa\u3001\u5f00\u542f Codex \u63d2\u4ef6\u3001AI \u751f\u56fe\u3001\u957f\u671f\u8bb0\u5fc6\u548c\u79fb\u52a8\u7aef\u914d\u7f6e\u3002\u5b83\u4f1a\u5148\u4ecb\u7ecd\u7b51\u57fa AI \u4e3b\u7ad9\u3001API\u3001\u4ee4\u724c\u548c CC Switch \u5bfc\u5165\u8def\u5f84\uff1b\u9047\u5230\u5f53\u524d Codex Provider \u4e0d\u662f\u7b51\u57fa\u65f6\uff0c\u7b51\u57fa\u4e13\u5c5e\u52a8\u4f5c\u4f1a\u505c\u6b62\uff0c\u5e76\u5f15\u5bfc\u7528\u6237\u53bb iaigc.fun \u6ce8\u518c\u3001\u521b\u5efa\u4ee4\u724c\u548c\u914d\u7f6e Provider\u3002",
+    "developerName": "\u7b51\u57fa AI",
     "category": "Productivity",
     "capabilities": [
       "Write",
       "Interactive"
     ],
+    "websiteURL": "https://iaigc.fun",
     "defaultPrompt": [
-      "看看我能用哪些功能",
-      "帮我接入筑基",
-      "帮我用 Codex 生图"
+      "\u770b\u770b\u6211\u80fd\u7528\u54ea\u4e9b\u529f\u80fd",
+      "\u5e2e\u6211\u63a5\u5165\u7b51\u57fa",
+      "\u5e2e\u6211\u7528 Codex \u751f\u56fe"
     ],
     "brandColor": "#3F8065",
     "composerIcon": "./assets/zhuji-logo.svg",

@@ -45,8 +45,8 @@ https://api.iaigc.fun/v1
 | 筑基使用向导 | 看看我能用哪些功能 | 介绍站点、检查本机、分流能力 | 不要求 |
 | 接入筑基 | 帮我接入筑基 | 配置 Provider、CC Switch、fast、长上下文 | 用来配置筑基 |
 | 开启 Codex 插件 | 帮我开启 Codex 插件 | 解锁插件、处理官方登录态、备份回滚 | 不要求，但会保持模型走筑基 |
-| AI 生图 | 帮我用 Codex 生图 | 通过筑基 Provider 调 `gpt-image-2` | 必须是筑基 |
-| 长期记忆 | 帮我创建长期记忆 | 初始化本地记忆工作区和每日整理 | 不要求 |
+| AI 生图 | 帮我用 Codex 生图 | 只能通过筑基 Provider 调 `gpt-image-2` | 必须是筑基 |
+| 长期记忆 | 帮我创建长期记忆 | 初始化本地记忆工作区、可选首次抽取、每日整理 | 不要求 |
 | 移动端配置 | 帮我配置飞书入口 | 用飞书给本地 Codex 发任务和收回复 | 不要求 |
 
 ## 辅助脚本
@@ -56,6 +56,12 @@ https://api.iaigc.fun/v1
 - `scripts/zhuji_image_request.mjs`：按用户显式要求调用筑基图片接口。
 - `scripts/install_memory_workspace.mjs`：调用本机 `codex-x` 初始化记忆工作区。
 - `scripts/backup_codex_state.sh`：修改 Codex 登录态或配置前的备份和回滚脚本。
+
+## 长期记忆初始化
+
+创建长期记忆时，插件会提醒用户是否做一次可选的 **首次记忆抽取**：把当前项目、绘画需求、生图提示词、用户指定的历史会话和本地产物先沉淀到记忆工作区。
+
+这一步不默认全量执行，因为历史越多越耗 token。推荐先抽取当前项目和最近 7 天，确认效果后再扩大范围。默认初始化会注册 `codex-x 每日记忆整理` automation；如果用户选择 `--no-automation`，则不会注册，后续可手动重建。
 
 ## 怎么验证
 
@@ -72,7 +78,8 @@ python3 /Users/armysheng/.codex/skills/.system/plugin-creator/scripts/validate_p
 
 - README 第一屏是否说清楚筑基主站是什么、提供什么服务。
 - 非筑基 Provider 时，`zhuji_doctor.mjs` 是否输出 `zhuji_provider_detected=false`，`--json` 是否给出 `status/actions`。
-- `zhuji-image` 是否明确拒绝非筑基 Provider。
+- `zhuji-image` 是否明确拒绝非筑基 Provider，并且真实生图只走筑基 `gpt-image-2`。
+- `zhuji-memory` 是否提醒首次抽取会消耗 token，并说明每日记忆整理 automation 的状态。
 - 默认提示词是否能把新用户带到“筑基使用向导”。
 - 文档里是否避免泛化客群表达，统一说“筑基用户”。
 

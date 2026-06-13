@@ -38,8 +38,8 @@ node scripts/zhuji_doctor.mjs
 |---|---|
 | 配筑基模型、CC Switch、fast、长上下文 | `zhuji-setup` |
 | Codex 插件灰屏、官方登录态、Apps/Plugins 不可用 | `zhuji-codex-plugins` |
-| 在 Codex 里用 `gpt-image-2` 生图 | `zhuji-image` |
-| 创建或整理本地长期记忆 | `zhuji-memory` |
+| 在 Codex 里用筑基 Provider 的 `gpt-image-2` 生图 | `zhuji-image` |
+| 创建长期记忆、首次抽取历史会话/绘画需求、每日整理 | `zhuji-memory` |
 | 手机飞书里给 Codex 发任务 | `zhuji-feishu` |
 
 ## 非筑基 Provider 话术
@@ -56,8 +56,8 @@ node scripts/zhuji_doctor.mjs
 
 - **接入筑基**：配置 Provider、生成导入配置、检查是否成功。
 - **开启 Codex 插件**：处理插件灰屏、官方登录态和模型 Provider 分离。
-- **AI 生图**：通过筑基 Provider 调 `gpt-image-2`。
-- **长期记忆**：创建本地文件化记忆工作区。
+- **AI 生图**：只能通过筑基 Provider 调 `gpt-image-2`。
+- **长期记忆**：创建本地文件化记忆工作区，可选抽取历史会话/绘画需求，并设置每日整理。
 - **移动端配置**：通过飞书桥接在手机上使用本地 Codex。
 
 ## 成功标准
