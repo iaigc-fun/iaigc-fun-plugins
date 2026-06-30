@@ -1,4 +1,4 @@
 interface:
   display_name: "长期记忆"
-  short_description: "创建记忆工作区，可选抽取历史会话并每日整理"
-  default_prompt: "帮我创建长期记忆工作区，并提醒我是否要抽取历史会话和绘画需求。"
+  short_description: "创建本地长期记忆工作区，可选抽取历史会话并每日整理"
+  default_prompt: "使用 $zhuji-memory 创建长期记忆工作区，并提醒是否抽取历史会话和绘画需求。"

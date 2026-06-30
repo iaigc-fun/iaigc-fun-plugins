@@ -9,7 +9,7 @@ test("prints safe Zhuji Codex config defaults", () => {
   });
 
   assert.equal(result.status, 0);
-  assert.match(result.stdout, /base_url = "https:\/\/api\.iaigc\.fun\/v1"/);
+  assert.match(result.stdout, /base_url = "https:\/\/sub\.iaigc\.fun\/v1"/);
   assert.match(result.stdout, /requires_openai_auth = false/);
   assert.match(result.stdout, /env_key = "ZHUJI_API_KEY"/);
 });

@@ -10,6 +10,8 @@ import { parseArgs } from "node:util";
 const codexHome = process.env.CODEX_HOME || path.join(os.homedir(), ".codex");
 const configPath = path.join(codexHome, "config.toml");
 const authPath = path.join(codexHome, "auth.json");
+const recommendedBaseUrl = "https://sub.iaigc.fun/v1";
+const subKeysUrl = "https://sub.iaigc.fun/keys";
 
 if (isMain()) {
   main();
@@ -96,7 +98,14 @@ export function detectZhujiProvider(source) {
   }
 
   if (hasZhujiHost(config)) {
-    return { detected: true, reason: "base_url", activeProvider: activeProvider || "", baseUrl: extractFirstUrl(config) };
+    const baseUrl = extractFirstUrl(config);
+    return {
+      detected: true,
+      reason: "base_url",
+      activeProvider: activeProvider || "",
+      baseUrl,
+      endpointType: classifyZhujiEndpoint(baseUrl)
+    };
   }
 
   if (/name\s*=\s*"[^"]*筑基[^"]*"/.test(config)) {
@@ -110,13 +119,19 @@ export function buildDoctorSummary() {
   const configSource = existsSync(configPath) ? readFileSync(configPath, "utf8") : "";
   const auth = existsSync(authPath) ? readAuthShape(authPath) : { exists: false };
   const zhujiProvider = detectZhujiProvider(configSource);
-  const status = zhujiProvider.detected ? "ok" : "warn";
+  const status = zhujiProvider.detected && zhujiProvider.endpointType !== "legacy" ? "ok" : "warn";
   const actions = zhujiProvider.detected
-    ? ["可以继续使用筑基专属能力，例如 AI 生图、模型检查和额度相关排查。"]
+    ? zhujiProvider.endpointType === "legacy"
+      ? [
+        "已识别为筑基历史/主站入口，建议迁移到 Sub 道场。",
+        `打开 ${subKeysUrl} 创建或复制 Sub 道场 API Key。`,
+        `把 Codex Provider 的 base_url 改为 ${recommendedBaseUrl}，并更新 ZHUJI_API_KEY。`
+      ]
+      : ["可以继续使用筑基专属能力，例如 AI 生图、模型检查和额度相关排查。"]
     : [
       "当前 Codex Provider 不是筑基，先不要继续筑基专属动作。",
-      "打开 https://iaigc.fun 注册/登录，在控制台创建令牌。",
-      "通过 CC Switch Codex 导入，或把 Codex Provider 的 base_url 配成 https://api.iaigc.fun/v1。"
+      `打开 ${subKeysUrl} 注册/登录并创建 Sub 道场 API Key。`,
+      `通过 CC Switch Codex 导入，或把 Codex Provider 的 base_url 配成 ${recommendedBaseUrl}。`
     ];
 
   return {
@@ -151,12 +166,20 @@ function printZhujiProviderStatus(configSource) {
   if (result.activeProvider) console.log(`  active_provider=${result.activeProvider}`);
   if (result.providerName) console.log(`  provider_name=${result.providerName}`);
   if (result.baseUrl) console.log(`  base_url=${result.baseUrl}`);
+  if (result.endpointType) console.log(`  endpoint_type=${result.endpointType}`);
+
+  if (result.detected && result.endpointType === "legacy") {
+    console.log("");
+    console.log("  已识别为筑基历史/主站入口。新用户和新配置建议升级到 Sub 道场：");
+    console.log(`  - API Key: ${subKeysUrl}`);
+    console.log(`  - base_url: ${recommendedBaseUrl}`);
+  }
 
   if (!result.detected) {
     console.log("");
     console.log("  当前 Codex provider 不是筑基。筑基专属动作会先停止，不会继续生图或改配置。");
-    console.log("  下一步：打开 https://iaigc.fun 注册/登录，在控制台创建令牌，然后通过 CC Switch Codex 导入，");
-    console.log("  或把 Codex base_url 配成 https://api.iaigc.fun/v1，并使用筑基令牌。");
+    console.log(`  下一步：打开 ${subKeysUrl} 注册/登录并创建 Sub 道场 API Key，然后通过 CC Switch Codex 导入，`);
+    console.log(`  或把 Codex base_url 配成 ${recommendedBaseUrl}，并使用 Sub 道场 API Key。`);
   }
 }
 
@@ -228,7 +251,13 @@ function parseModelProviders(source) {
 
 function matchZhujiProvider(provider) {
   if (hasZhujiHost(provider.base_url || "")) {
-    return { detected: true, reason: "base_url", baseUrl: provider.base_url || "" };
+    const baseUrl = provider.base_url || "";
+    return {
+      detected: true,
+      reason: "base_url",
+      baseUrl,
+      endpointType: classifyZhujiEndpoint(baseUrl)
+    };
   }
 
   if (String(provider.name || "").includes("筑基")) {
@@ -240,6 +269,13 @@ function matchZhujiProvider(provider) {
 
 function hasZhujiHost(value) {
   return /https?:\/\/(?:[a-z0-9-]+\.)*iaigc\.fun(?:\/|$)/i.test(String(value || ""));
+}
+
+function classifyZhujiEndpoint(value) {
+  const source = String(value || "");
+  if (/^https?:\/\/sub\.iaigc\.fun(?:\/|$)/i.test(source)) return "sub";
+  if (hasZhujiHost(source)) return "legacy";
+  return "";
 }
 
 function extractTopLevelValue(source, key) {

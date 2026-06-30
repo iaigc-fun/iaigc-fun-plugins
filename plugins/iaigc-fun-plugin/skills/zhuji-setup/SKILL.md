@@ -58,7 +58,7 @@ model_auto_compact_token_limit = 700000
 
 [model_providers.custom]
 name = "筑基"
-base_url = "https://api.iaigc.fun/v1"
+base_url = "https://sub.iaigc.fun/v1"
 wire_api = "responses"
 requires_openai_auth = false
 experimental_bearer_token = "<ZHUJI_API_KEY>"
@@ -74,7 +74,7 @@ goals = true
 ```toml
 [model_providers.custom]
 name = "筑基"
-base_url = "https://api.iaigc.fun/v1"
+base_url = "https://sub.iaigc.fun/v1"
 wire_api = "responses"
 requires_openai_auth = false
 env_key = "ZHUJI_API_KEY"
@@ -108,4 +108,4 @@ node scripts/zhuji_doctor.mjs
 - **一键导入配置**：给 CC Switch 用，帮用户少改文件。
 - **推荐加速配置**：包含 `service_tier="fast"`、`fast_mode=true`、1M 上下文和 700K 自动压缩阈值。
 - **检查是否配置成功**：看登录、provider、base_url、模型和 `codex doctor`，不看密钥明文。
-- **筑基 API Base**：首选 `https://api.iaigc.fun/v1`；检测脚本也会识别 `iaigc.fun` 体系的历史入口。
+- **筑基 API Base**：首选 `https://sub.iaigc.fun/v1`；API Key 从 `https://sub.iaigc.fun/keys` 创建或复制。检测脚本也会识别 `api.iaigc.fun`、`router.iaigc.fun` 等历史入口，并提示迁移。

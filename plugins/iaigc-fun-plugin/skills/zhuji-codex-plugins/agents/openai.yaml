@@ -1,5 +1,4 @@
 interface:
   display_name: "开启 Codex 插件"
-  short_description: "安全开启 Codex App 插件并保留筑基模型配置"
-  default_prompt: "帮我开启 Codex 插件，先备份，别改坏当前登录态。"
-
+  short_description: "启用本地插件并排查灰屏，官方 Apps 需要时再处理登录态"
+  default_prompt: "使用 $zhuji-codex-plugins 开启 Codex 插件；本地插件优先，不需要官方账号就别动登录态。"

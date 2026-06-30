@@ -1,4 +1,4 @@
 interface:
   display_name: "筑基使用向导"
-  short_description: "介绍筑基站点，检查 Provider，并分流常用能力。"
+  short_description: "介绍筑基站点，检查 Provider，并分流常用能力"
   default_prompt: "使用 $zhuji-guide 看看我能用哪些筑基功能，并检查 Codex 是否已接入筑基。"

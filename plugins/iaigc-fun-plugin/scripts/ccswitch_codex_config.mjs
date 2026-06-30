@@ -4,7 +4,7 @@ import { parseArgs } from "node:util";
 
 const { values } = parseArgs({
   options: {
-    endpoint: { type: "string", default: "https://api.iaigc.fun/v1" },
+    endpoint: { type: "string", default: "https://sub.iaigc.fun/v1" },
     model: { type: "string", default: "gpt-5.5" },
     provider: { type: "string", default: "custom" },
     name: { type: "string", default: "筑基" },

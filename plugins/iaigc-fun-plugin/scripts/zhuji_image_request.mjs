@@ -12,7 +12,7 @@ const { values } = parseArgs({
     quality: { type: "string", default: "auto" },
     n: { type: "string", default: "1" },
     output: { type: "string", default: "zhuji-image.png" },
-    "base-url": { type: "string", default: process.env.ZHUJI_BASE_URL || "https://api.iaigc.fun/v1" },
+    "base-url": { type: "string", default: process.env.ZHUJI_BASE_URL || "https://sub.iaigc.fun/v1" },
     "api-key-env": { type: "string", default: "ZHUJI_API_KEY" }
   }
 });
@@ -20,6 +20,10 @@ const { values } = parseArgs({
 const prompt = values.prompt;
 if (!prompt) {
   fail("Usage: zhuji_image_request.mjs --prompt <text> [--output image.png]");
+}
+
+if (values.model !== "gpt-image-2") {
+  fail(`Zhuji image generation only supports gpt-image-2 in this plugin. Received: ${values.model}`);
 }
 
 const apiKey = process.env[values["api-key-env"]] || process.env.OPENAI_API_KEY;
