@@ -12,8 +12,7 @@ const { values } = parseArgs({
     quality: { type: "string", default: "auto" },
     n: { type: "string", default: "1" },
     output: { type: "string", default: "zhuji-image.png" },
-    "base-url": { type: "string", default: process.env.ZHUJI_BASE_URL || "https://sub.iaigc.fun/v1" },
-    "api-key-env": { type: "string", default: "ZHUJI_API_KEY" }
+    "base-url": { type: "string", default: process.env.ZHUJI_BASE_URL || "https://sub.iaigc.fun/v1" }
   }
 });
 
@@ -26,9 +25,9 @@ if (values.model !== "gpt-image-2") {
   fail(`Zhuji image generation only supports gpt-image-2 in this plugin. Received: ${values.model}`);
 }
 
-const apiKey = process.env[values["api-key-env"]] || process.env.OPENAI_API_KEY;
+const apiKey = process.env.ZHUJI_API_KEY;
 if (!apiKey) {
-  fail(`Missing Zhuji API key. Set ${values["api-key-env"]}. OPENAI_API_KEY is accepted only as a compatibility variable and must contain a Zhuji token.`);
+  fail("Missing Zhuji image API key. Create a Sub API Key at https://sub.iaigc.fun/keys, then run with ZHUJI_API_KEY. Codex Provider keys are not used for image generation, and OPENAI_API_KEY is not used as a fallback.");
 }
 
 const baseUrl = String(values["base-url"]).replace(/\/+$/, "");

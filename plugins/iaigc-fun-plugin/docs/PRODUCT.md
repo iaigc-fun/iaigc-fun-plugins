@@ -41,7 +41,7 @@
 
 ### AI 生图
 
-用户可以把短视频截图、商品参考图或一句中文需求交给 Codex，让插件先确认当前 Provider 是筑基，再通过筑基 Provider 使用 `gpt-image-2` 生成图片。新版默认使用 Sub 道场 API Key 和 `https://sub.iaigc.fun/v1`；图片消耗按 Sub 道场分组的图片倍率计算，当前图片倍率口径为 `2.0`，最终以 Sub 道场页面实值为准。典型价值是把“我看到一个草鞋灵感”变成可继续修改的商品详情图、主图或海报素材。
+用户可以把短视频截图、商品参考图或一句中文需求交给 Codex，让插件先确认当前 Provider 是筑基，再通过筑基 Provider 使用 `gpt-image-2` 生成图片。新版默认使用 Sub 道场 API Key 和 `https://sub.iaigc.fun/v1`；真实生图只读取 `ZHUJI_API_KEY`，没有时停止请求并引导用户到 `https://sub.iaigc.fun/keys` 新建 key，不复用 Codex Provider key 或 `OPENAI_API_KEY`。图片消耗按 Sub 道场分组的图片倍率计算，当前图片倍率口径为 `2.0`，最终以 Sub 道场页面实值为准。典型价值是把“我看到一个草鞋灵感”变成可继续修改的商品详情图、主图或海报素材。
 
 <p>
   <img src="../assets/cases/ecommerce-straw-sandals-reference.jpg" alt="草鞋参考素材" width="32%" />
@@ -81,7 +81,7 @@
 
 ## Provider 拒绝规则
 
-这些动作必须确认当前 Provider 是筑基，或用户显式提供筑基 Base URL 和 Sub 道场 API Key：
+这些动作必须确认当前 Provider 是筑基；真实生图还必须有用户显式传入的 `ZHUJI_API_KEY`：
 
 - 通过 `gpt-image-2` 发起真实生图请求。
 - 解释筑基额度、灵石、套餐消耗。
@@ -95,6 +95,13 @@
 你可以打开 https://sub.iaigc.fun 注册/登录，在 https://sub.iaigc.fun/keys 创建 API Key，然后用 CC Switch Codex 导入；
 或把 Codex Provider 的 base_url 配成 https://sub.iaigc.fun/v1，并使用 Sub 道场 API Key。
 ```
+
+生图 key 决策树：
+
+1. 当前环境有 `ZHUJI_API_KEY`：直接使用它调用图片接口，并提醒会消耗图片额度。
+2. 当前环境没有 `ZHUJI_API_KEY`：停止真实请求，引导用户打开 `https://sub.iaigc.fun/keys` 新建 key。
+3. 用户新建 key 后：让用户临时传入 `ZHUJI_API_KEY` 再继续。
+4. 不读取 `~/.codex/auth.json`，不复用 Codex 对话 key，不使用 `OPENAI_API_KEY` 兜底。
 
 ## 长期记忆初始化规则
 

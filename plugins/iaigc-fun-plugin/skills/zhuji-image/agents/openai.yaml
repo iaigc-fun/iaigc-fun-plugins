@@ -1,4 +1,4 @@
 interface:
   display_name: "AI 生图"
-  short_description: "通过筑基 Provider 使用 gpt-image-2 生成图片"
-  default_prompt: "使用 $zhuji-image 通过筑基 Provider 的 gpt-image-2 生成一张图片。"
+  short_description: "用 ZHUJI_API_KEY 调筑基 gpt-image-2 生图"
+  default_prompt: "使用 $zhuji-image 检查筑基 Provider，并用 ZHUJI_API_KEY 调 gpt-image-2 生图。"

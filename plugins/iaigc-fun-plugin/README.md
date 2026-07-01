@@ -81,7 +81,7 @@ codex plugin add iaigc-fun-plugin@iaigc-fun
 
 ### AI 生图：从参考素材到商品图
 
-筑基生图入口不是操练场，而是在 Codex 里通过筑基 Provider 调用 `gpt-image-2`。新版默认走 Sub 道场 API Key 和 `https://sub.iaigc.fun/v1`，图片倍率按 Sub 道场分组配置计算；当前图片倍率口径为 `2.0`，最终以 Sub 道场页面实值为准。适合把用户随手看到的参考图、短视频截图或商品想法，整理成电商主图、详情页、海报和复用提示词。
+筑基生图入口不是操练场，而是在 Codex 里通过筑基 Provider 调用 `gpt-image-2`。新版默认走 Sub 道场 API Key 和 `https://sub.iaigc.fun/v1`，真实生图只读取 `ZHUJI_API_KEY`；Codex Provider key 只用于判断是否接入筑基，不会自动当作生图 key。图片倍率按 Sub 道场分组配置计算；当前图片倍率口径为 `2.0`，最终以 Sub 道场页面实值为准。适合把用户随手看到的参考图、短视频截图或商品想法，整理成电商主图、详情页、海报和复用提示词。
 
 <p>
   <img src="./assets/cases/ecommerce-straw-sandals-reference.jpg" alt="草鞋参考素材" width="32%" />
@@ -131,6 +131,7 @@ python3 /Users/armysheng/.codex/skills/.system/plugin-creator/scripts/validate_p
 - 默认 API Base 是否是 `https://sub.iaigc.fun/v1`，并明确 API Key 来自 `https://sub.iaigc.fun/keys`。
 - 非筑基 Provider 时，`zhuji_doctor.mjs` 是否输出 `zhuji_provider_detected=false`，`--json` 是否给出 `status/actions`。
 - `zhuji-image` 是否明确拒绝非筑基 Provider，并且真实生图只走筑基 `gpt-image-2`。
+- `zhuji-image` 是否只读取 `ZHUJI_API_KEY`，没有时引导用户去 `https://sub.iaigc.fun/keys` 新建 key，而不是复用 Codex Provider key 或 `OPENAI_API_KEY`。
 - `zhuji-memory` 是否提醒首次抽取会消耗 token，并说明每日记忆整理 automation 的状态。
 - 默认提示词是否能把新用户带到“筑基使用向导”。
 - 文档里是否避免泛化客群表达，统一说“筑基用户”。
